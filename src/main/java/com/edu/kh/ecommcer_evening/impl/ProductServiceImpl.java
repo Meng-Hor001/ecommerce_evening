@@ -1,0 +1,66 @@
+package com.edu.kh.ecommcer_evening.impl;
+
+import com.edu.kh.ecommcer_evening.domain.Category;
+import com.edu.kh.ecommcer_evening.domain.Product;
+import com.edu.kh.ecommcer_evening.dto.CreateProductRequest;
+import com.edu.kh.ecommcer_evening.dto.ProductResponse;
+import com.edu.kh.ecommcer_evening.mapper.ProductMapper;
+import com.edu.kh.ecommcer_evening.repository.CategoryRepository;
+import com.edu.kh.ecommcer_evening.repository.ProductRepository;
+import com.edu.kh.ecommcer_evening.service.ProductService;
+
+import com.edu.kh.ecommcer_evening.util.GenerateUtil;
+import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.http.HttpStatus;
+import org.springframework.stereotype.Service;
+import org.springframework.web.server.ResponseStatusException;
+
+@Service
+@RequiredArgsConstructor
+public class ProductServiceImpl implements ProductService {
+
+    private final ProductRepository productRepository;
+    private final CategoryRepository categoryRepository;
+    private final ProductMapper productMapper;
+
+    @Override
+    public ProductResponse createNew(CreateProductRequest createProductRequest) {
+        //TODO : write your business logic
+        // 1. Validate category ID (exists or not)
+
+        Category category = categoryRepository
+                .findById(createProductRequest.categoryId())
+                .orElseThrow(()-> new ResponseStatusException(HttpStatus.NOT_FOUND,
+                        "Category ID has been not found"
+
+                ));
+
+        // 2. Transfer data from DTO to Entity
+        Product product = new Product();
+        product.setName(createProductRequest.name());
+        product.setPrice(createProductRequest.price());
+        product.setQty(createProductRequest.qty());
+        product.setDescription(createProductRequest.description());
+        product.setCategory(category);
+
+        // 3. System data
+        product.setCode(GenerateUtil.randomProductCode());
+        product.setIsAvailable(true);
+
+        // 4. Save into database
+        product = productRepository.save(product);
+
+        // 5. Transfer data from Entity to DTO
+        return productMapper.productToProductResponse(product);
+    }
+
+    @Override
+    public Page<ProductResponse> getProducts(int pageNumber, int pageSize) {
+        Pageable pageable = PageRequest.of(pageNumber, pageSize);
+        return productRepository.findAll(pageable)
+                .map(productMapper::productToProductResponse);
+    }
+}
