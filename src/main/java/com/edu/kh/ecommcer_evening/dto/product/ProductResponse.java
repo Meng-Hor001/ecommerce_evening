@@ -1,7 +1,5 @@
-package com.edu.kh.ecommcer_evening.dto;
+package com.edu.kh.ecommcer_evening.dto.product;
 
-import jakarta.persistence.Column;
-import jakarta.persistence.ManyToOne;
 import lombok.Builder;
 
 import java.math.BigDecimal;

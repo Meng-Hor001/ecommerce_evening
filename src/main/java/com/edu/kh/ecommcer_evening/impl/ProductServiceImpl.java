@@ -2,8 +2,9 @@ package com.edu.kh.ecommcer_evening.impl;
 
 import com.edu.kh.ecommcer_evening.domain.Category;
 import com.edu.kh.ecommcer_evening.domain.Product;
-import com.edu.kh.ecommcer_evening.dto.CreateProductRequest;
-import com.edu.kh.ecommcer_evening.dto.ProductResponse;
+import com.edu.kh.ecommcer_evening.dto.product.CreateProductRequest;
+import com.edu.kh.ecommcer_evening.dto.product.ProductResponse;
+import com.edu.kh.ecommcer_evening.dto.product.UpdateProductRequest;
 import com.edu.kh.ecommcer_evening.mapper.ProductMapper;
 import com.edu.kh.ecommcer_evening.repository.CategoryRepository;
 import com.edu.kh.ecommcer_evening.repository.ProductRepository;
@@ -25,6 +26,16 @@ public class ProductServiceImpl implements ProductService {
     private final ProductRepository productRepository;
     private final CategoryRepository categoryRepository;
     private final ProductMapper productMapper;
+
+    @Override
+    public ProductResponse getProductByCode(String code) {
+        return productRepository
+                .findById(code)
+                .map(productMapper::productToProductResponse)
+                .orElseThrow(()-> new ResponseStatusException(HttpStatus.NOT_FOUND,
+                        "Product Code not found"
+                ));
+    }
 
     @Override
     public ProductResponse createNew(CreateProductRequest createProductRequest) {
@@ -62,5 +73,22 @@ public class ProductServiceImpl implements ProductService {
         Pageable pageable = PageRequest.of(pageNumber, pageSize);
         return productRepository.findAll(pageable)
                 .map(productMapper::productToProductResponse);
+    }
+
+    @Override
+    public ProductResponse updateByCode(String code, UpdateProductRequest updateProductRequest) {
+        // TODO :
+        // Validate product code
+        Product product = productRepository
+                .findById(code)
+                .orElseThrow(()-> new ResponseStatusException(HttpStatus.NOT_FOUND,
+                        "Product Code not found"
+                ));
+
+
+        productMapper.updateProductRequestToProduct(updateProductRequest, product);
+
+        product = productRepository.save(product);
+        return productMapper.productToProductResponse(product);
     }
 }

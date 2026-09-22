@@ -1,8 +1,9 @@
 package com.edu.kh.ecommcer_evening.controller;
 
 
-import com.edu.kh.ecommcer_evening.dto.CreateProductRequest;
-import com.edu.kh.ecommcer_evening.dto.ProductResponse;
+import com.edu.kh.ecommcer_evening.dto.product.CreateProductRequest;
+import com.edu.kh.ecommcer_evening.dto.product.ProductResponse;
+import com.edu.kh.ecommcer_evening.dto.product.UpdateProductRequest;
 import com.edu.kh.ecommcer_evening.service.ProductService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
@@ -28,10 +29,25 @@ public class ProductController {
         return productService.getProducts(pageNumber, pageSize);
     }
 
+    @GetMapping("/{code}")
+    public ProductResponse getProductByCode(@PathVariable String code){
+        log.info("getProductByCode {}", code);
+        return productService.getProductByCode(code);
+    }
+
+
     @ResponseStatus(HttpStatus.CREATED)
     @PostMapping
     public ProductResponse createNew(@Valid  @RequestBody CreateProductRequest createProductRequest){
         log.info("createProductRequest : {}", createProductRequest);
         return productService.createNew(createProductRequest);
+    }
+
+    @PutMapping("/{code}")
+    public ProductResponse updateProductByCode(
+            @PathVariable String code,
+            @Valid @RequestBody UpdateProductRequest updateProductRequest){
+        log.info("updateProductByCode : {}", updateProductRequest);
+        return productService.updateByCode(code, updateProductRequest);
     }
 }
