@@ -2,6 +2,7 @@ package com.edu.kh.ecommcer_evening.controller;
 
 
 import com.edu.kh.ecommcer_evening.dto.product.CreateProductRequest;
+import com.edu.kh.ecommcer_evening.dto.product.PatchProductRequest;
 import com.edu.kh.ecommcer_evening.dto.product.ProductResponse;
 import com.edu.kh.ecommcer_evening.dto.product.UpdateProductRequest;
 import com.edu.kh.ecommcer_evening.service.ProductService;
@@ -49,5 +50,12 @@ public class ProductController {
             @Valid @RequestBody UpdateProductRequest updateProductRequest){
         log.info("updateProductByCode : {}", updateProductRequest);
         return productService.updateByCode(code, updateProductRequest);
+    }
+
+    @PatchMapping("/{code}")
+    public ProductResponse patchProductByCode(@PathVariable String code,
+                                              @Valid @RequestBody PatchProductRequest patchProductRequest){
+        log.info("patchProductByCode {}", patchProductRequest);
+        return productService.patchProductByCode(code,patchProductRequest);
     }
 }

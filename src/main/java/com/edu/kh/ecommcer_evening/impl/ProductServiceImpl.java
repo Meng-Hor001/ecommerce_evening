@@ -3,6 +3,7 @@ package com.edu.kh.ecommcer_evening.impl;
 import com.edu.kh.ecommcer_evening.domain.Category;
 import com.edu.kh.ecommcer_evening.domain.Product;
 import com.edu.kh.ecommcer_evening.dto.product.CreateProductRequest;
+import com.edu.kh.ecommcer_evening.dto.product.PatchProductRequest;
 import com.edu.kh.ecommcer_evening.dto.product.ProductResponse;
 import com.edu.kh.ecommcer_evening.dto.product.UpdateProductRequest;
 import com.edu.kh.ecommcer_evening.mapper.ProductMapper;
@@ -89,6 +90,33 @@ public class ProductServiceImpl implements ProductService {
         productMapper.updateProductRequestToProduct(updateProductRequest, product);
 
         product = productRepository.save(product);
+        return productMapper.productToProductResponse(product);
+    }
+
+    @Override
+    public ProductResponse patchProductByCode(String code, PatchProductRequest patchProductRequest) {
+        Product product = productRepository
+                .findById(code)
+                .orElseThrow(()-> new ResponseStatusException(HttpStatus.NOT_FOUND,
+                        "Product Code not found"
+                ));
+
+
+       if (patchProductRequest.categoryId() != null){
+            Category category = categoryRepository
+                   .findById(patchProductRequest.categoryId())
+                   .orElseThrow(()-> new ResponseStatusException(HttpStatus.NOT_FOUND,
+                           "Category ID has been not found"
+
+                   ));
+           product.setCategory(category);
+       }
+
+        productMapper.patchProductRequestToProduct(patchProductRequest,product);
+
+
+        product = productRepository.save(product);
+
         return productMapper.productToProductResponse(product);
     }
 }
