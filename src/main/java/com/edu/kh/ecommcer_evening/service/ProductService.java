@@ -19,4 +19,6 @@ public interface ProductService {
     ProductResponse updateByCode(String code, UpdateProductRequest updateProductRequest);
 
     ProductResponse patchProductByCode(String code, PatchProductRequest patchProductRequest);
+
+    void deleteByCode(String code);
 }

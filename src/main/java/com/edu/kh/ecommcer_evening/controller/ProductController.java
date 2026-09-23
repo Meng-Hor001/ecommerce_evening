@@ -58,4 +58,10 @@ public class ProductController {
         log.info("patchProductByCode {}", patchProductRequest);
         return productService.patchProductByCode(code,patchProductRequest);
     }
+
+    @ResponseStatus(HttpStatus.NO_CONTENT)
+    @DeleteMapping("/{code}")
+    public void deleteByCode(@PathVariable String code){
+        productService.deleteByCode(code);
+    }
 }

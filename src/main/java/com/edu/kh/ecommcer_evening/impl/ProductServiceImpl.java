@@ -119,4 +119,16 @@ public class ProductServiceImpl implements ProductService {
 
         return productMapper.productToProductResponse(product);
     }
+
+    @Override
+    public void deleteByCode(String code) {
+        Product product = productRepository
+                .findById(code)
+                .orElseThrow(()-> new ResponseStatusException(HttpStatus.NOT_FOUND,
+                        "Product Code not found"
+                ));
+        productRepository.delete(product);
+
+
+    }
 }
