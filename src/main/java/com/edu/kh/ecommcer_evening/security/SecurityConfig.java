@@ -5,14 +5,11 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.http.HttpMethod;
-import org.springframework.security.authentication.dao.DaoAuthenticationProvider;
 import org.springframework.security.config.Customizer;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configurers.AbstractHttpConfigurer;
 import org.springframework.security.config.http.SessionCreationPolicy;
-import org.springframework.security.core.userdetails.UserDetailsService;
-import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
 
 @Configuration
@@ -20,43 +17,21 @@ import org.springframework.security.web.SecurityFilterChain;
 @RequiredArgsConstructor
 public class SecurityConfig {
 
-    private final PasswordEncoder passwordEncoder;
-
-    // Build data of users (in memory)
-//    @Bean
-//    public InMemoryUserDetailsManager inMemoryUserDetailsManager(){
-//        UserDetails userAdmin = User
-//                .builder()
-//                .username("admin")
-//                .password(passwordEncoder.encode("qwer"))
-//                .roles("ADMIN")
-//                .build();
-//
-//        UserDetails userNormal = User
-//                .builder()
-//                .username("user")
-//                .password(passwordEncoder.encode("qwer"))
-//                .roles("NORMAL")
-//                .build();
-//
-//        InMemoryUserDetailsManager manager = new InMemoryUserDetailsManager();
-//        manager.createUser(userAdmin);
-//        manager.createUser(userNormal);
-//
-//        return manager;
-//    }
-
-    @Bean
-    public DaoAuthenticationProvider daoAuthenticationProvider(UserDetailsService userDetailsService){
-        DaoAuthenticationProvider provider = new DaoAuthenticationProvider(userDetailsService);
-        provider.setPasswordEncoder(passwordEncoder);
-        return provider;
-    }
-
     // Build firewall
     @Bean
     public SecurityFilterChain apiSecurity (HttpSecurity http){
-        // TODO : what you want to build
+
+        // 1. Security Mechanism -> OAuth2 & JWT
+        http.oauth2ResourceServer(
+                oauth2-> oauth2
+                        .jwt(Customizer.withDefaults())
+        );
+
+        // 2. Session Stateless
+        // Session : configure to stateless
+        http.sessionManagement(session->session.sessionCreationPolicy(SessionCreationPolicy.STATELESS));
+
+        // 3. Endpoint Security
         http.authorizeHttpRequests(request -> request
                 .requestMatchers(HttpMethod.POST,"/api/v1/products").hasAnyRole("ADMIN", "BUSINESS")
                 .requestMatchers(HttpMethod.DELETE,"/api/v1/products").hasAnyRole("ADMIN")
@@ -66,15 +41,9 @@ public class SecurityConfig {
         );
 
 
-        // Disable CRSF (Cross Site Request Forgery) token
+        // 4. Disable CRSF (Cross Site Request Forgery) token
         http.csrf(AbstractHttpConfigurer::disable);
-
-        // Security Mechanism : HTTP Basic Authentication
-        http.httpBasic(Customizer.withDefaults());
-
-        // Session : configure to stateless
-        http.sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS)
-        );
+        http.formLogin(AbstractHttpConfigurer::disable);
         return http.build();
     }
 }

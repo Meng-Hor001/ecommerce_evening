@@ -1,5 +1,6 @@
-package com.edu.kh.ecommcer_evening.domain;
+package com.edu.kh.ecommcer_evening.feature.Order;
 
+import com.edu.kh.ecommcer_evening.feature.OrderLine.OrderLine;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.NoArgsConstructor;

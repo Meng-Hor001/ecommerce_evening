@@ -1,4 +1,4 @@
-package com.edu.kh.ecommcer_evening.dto.product;
+package com.edu.kh.ecommcer_evening.feature.product.dto.product;
 
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;

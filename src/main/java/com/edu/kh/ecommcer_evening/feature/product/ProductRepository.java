@@ -1,6 +1,4 @@
-package com.edu.kh.ecommcer_evening.repository;
-
-import com.edu.kh.ecommcer_evening.domain.Product;
+package com.edu.kh.ecommcer_evening.feature.product;
 
 import org.springframework.data.jpa.repository.JpaRepository;
 

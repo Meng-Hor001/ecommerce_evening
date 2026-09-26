@@ -1,5 +1,6 @@
-package com.edu.kh.ecommcer_evening.domain;
+package com.edu.kh.ecommcer_evening.feature.Category;
 
+import com.edu.kh.ecommcer_evening.feature.product.Product;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -19,6 +20,9 @@ public class Category {
 
     @Column(nullable = false, unique = true, length = 50)
     private String name;
+
+    private String description;
+    private String icon;
 
     @OneToMany(mappedBy = "category")
     private List<Product> products;

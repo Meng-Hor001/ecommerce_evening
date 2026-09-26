@@ -1,7 +1,8 @@
-package com.edu.kh.ecommcer_evening.domain;
+package com.edu.kh.ecommcer_evening.feature.product;
 
+import com.edu.kh.ecommcer_evening.feature.Category.Category;
+import com.edu.kh.ecommcer_evening.feature.OrderLine.OrderLine;
 import jakarta.persistence.*;
-import jakarta.validation.constraints.Positive;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;

@@ -1,9 +1,8 @@
-package com.edu.kh.ecommcer_evening.mapper;
+package com.edu.kh.ecommcer_evening.feature.product;
 
-import com.edu.kh.ecommcer_evening.domain.Product;
-import com.edu.kh.ecommcer_evening.dto.product.PatchProductRequest;
-import com.edu.kh.ecommcer_evening.dto.product.ProductResponse;
-import com.edu.kh.ecommcer_evening.dto.product.UpdateProductRequest;
+import com.edu.kh.ecommcer_evening.feature.product.dto.product.PatchProductRequest;
+import com.edu.kh.ecommcer_evening.feature.product.dto.product.ProductResponse;
+import com.edu.kh.ecommcer_evening.feature.product.dto.product.UpdateProductRequest;
 import org.mapstruct.*;
 
 
